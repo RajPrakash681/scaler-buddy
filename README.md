@@ -1,9 +1,9 @@
 # ScalerChat — Persona-Based AI Chatbot
 
-Have real conversations with **Anshuman Singh**, **Abhimanyu Saxena**, and **Kshitij Mishra** from Scaler Academy — powered by GPT-4o-mini and carefully researched system prompts.
+Have real conversations with **Anshuman Singh**, **Abhimanyu Saxena**, and **Kshitij Mishra** from Scaler Academy — powered by Groq (Llama 3.3 70B) and carefully researched system prompts.
 
-**Live App:** _[Add your Vercel URL here after deployment]_  
-**Backend API:** _[Add your Railway URL here after deployment]_
+**Live App:** _[Add your Render frontend URL here after deployment]_  
+**Backend API:** https://scalerchat.onrender.com
 
 ---
 
@@ -15,8 +15,8 @@ Have real conversations with **Anshuman Singh**, **Abhimanyu Saxena**, and **Ksh
 - **Typing indicator** — animated dots while the API call is in progress
 - **Multi-turn conversation** — chat history is passed with each request for context
 - **Error handling** — graceful fallback messages if the API is unavailable
-- **Dark theme UI** — glassmorphism design with per-persona accent colors
-- **Mobile responsive** — works on any screen size
+- **Claude-style UI** — clean dark theme with sidebar layout, per-persona accent colors
+- **Mobile responsive** — off-canvas sidebar drawer with hamburger toggle
 
 ---
 
@@ -24,11 +24,10 @@ Have real conversations with **Anshuman Singh**, **Abhimanyu Saxena**, and **Ksh
 
 | Layer    | Tech                              |
 |----------|-----------------------------------|
-| Frontend | React 19, custom CSS animations   |
+| Frontend | React 19, custom CSS              |
 | Backend  | Node.js, Express 5                |
-| LLM API  | OpenAI GPT-4o-mini                |
-| Frontend Deploy | Vercel                     |
-| Backend Deploy  | Railway                    |
+| LLM API  | Groq — Llama 3.3 70B Versatile    |
+| Deploy   | Render (Web Service + Static Site)|
 
 ---
 
@@ -36,13 +35,13 @@ Have real conversations with **Anshuman Singh**, **Abhimanyu Saxena**, and **Ksh
 
 ### Prerequisites
 - Node.js 18+
-- An OpenAI API key (get one at [platform.openai.com](https://platform.openai.com/api-keys))
+- A Groq API key (get one free at [console.groq.com](https://console.groq.com))
 
 ### 1. Clone and install
 
 ```bash
-git clone <your-repo-url>
-cd chat-persona
+git clone https://github.com/RajPrakash681/scalerchat.git
+cd scalerchat
 ```
 
 ### 2. Set up the backend
@@ -50,7 +49,7 @@ cd chat-persona
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
+# Edit .env and add your GROQ_API_KEY
 npm install
 npm start
 ```
@@ -73,44 +72,38 @@ The app opens at `http://localhost:3000`.
 
 ## Deployment
 
-### Backend → Railway
+Both services are deployed on **Render**.
 
-```bash
-npm install -g @railway/cli
-railway login
-cd backend
-railway init
-railway up
-```
+### Backend → Render Web Service
 
-Set the `OPENAI_API_KEY` environment variable in the Railway dashboard under your project's Variables tab.
+1. Go to [render.com](https://render.com) → New → **Web Service**
+2. Connect repo: `RajPrakash681/scalerchat`
+3. Set **Root Directory** to `backend`
+4. Build command: `npm install`
+5. Start command: `npm start`
+6. Under **Environment Variables**, add:
+   - `GROQ_API_KEY` → your Groq API key
+7. Deploy — Render gives you a public URL (e.g. `https://scalerchat.onrender.com`)
 
-### Frontend → Vercel
+### Frontend → Render Static Site
 
-```bash
-npm install -g vercel
-vercel login
-cd frontend
-```
-
-Before deploying, set `REACT_APP_API_URL` to your Railway backend URL:
-
-```bash
-vercel env add REACT_APP_API_URL
-# Enter: https://your-backend.up.railway.app
-vercel --prod
-```
-
-After deploying, update the live links at the top of this README.
+1. Go to Render → New → **Static Site**
+2. Connect the same repo
+3. Set **Root Directory** to `frontend`
+4. Build command: `npm install && npm run build`
+5. Publish directory: `build`
+6. Under **Environment Variables**, add:
+   - `REACT_APP_API_URL` → your backend Render URL
+7. Deploy
 
 ---
 
 ## Project Structure
 
 ```
-chat-persona/
+scalerchat/
 ├── backend/
-│   ├── server.js          # Express API + system prompts + OpenAI integration
+│   ├── server.js          # Express API + system prompts + Groq integration
 │   ├── .env.example       # Environment variable template
 │   └── package.json
 ├── frontend/
@@ -145,7 +138,7 @@ See [prompts.md](./prompts.md) for the full prompts with inline design annotatio
 
 **Backend** (`backend/.env`):
 ```
-OPENAI_API_KEY=sk-...
+GROQ_API_KEY=your_groq_api_key_here
 PORT=5000
 ```
 
